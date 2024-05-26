@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """0. Regex-ing"""
 from typing import List
+import os
 import re
 import logging
+
+from mysql.connector.connection import MySQLConnection
 
 
 PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
@@ -74,3 +77,28 @@ def get_logger() -> logging.Logger:
     logger.addHandler(handler)
 
     return logger
+
+
+def get_db() -> MySQLConnection:
+    """
+    Creates and returns a connection to the MySQL database.
+
+    The connection details are retrieved from environment variables:
+    - PERSONAL_DATA_DB_NAME
+    - PERSONAL_DATA_DB_PASSWORD
+    - PERSONAL_DATA_DB_USERNAME
+    - PERSONAL_DATA_DB_HOST
+
+    Returns:
+        MySQLConnection: A connection to the MySQL database.
+    """
+    env = os.environ
+
+    db_name = env.get("PERSONAL_DATA_DB_NAME")
+    db_pass = env.get("PERSONAL_DATA_DB_PASSWORD", "")
+    db_user = env.get("PERSONAL_DATA_DB_USERNAME", "root")
+    db_host = env.get("PERSONAL_DATA_DB_HOST", "localhost")
+
+    return MySQLConnection(user=db_user, password=db_pass,
+                           host=db_host,
+                           database=db_name)
