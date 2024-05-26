@@ -5,6 +5,9 @@ import re
 import logging
 
 
+PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'ip')
+
+
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class
     """
@@ -50,3 +53,23 @@ def filter_datum(fields: List[str], redaction: str,
         if v.split('=')[0] in fields:
             message = re.sub("{}".format(v.split("=")[1]), redaction, message)
     return message
+
+
+def get_logger() -> logging.Logger:
+    """
+    Creates and configures a logger for user data.
+
+    The logger will have a stream handler with a redacting formatter to
+    handle sensitive information.
+
+    Returns:
+        logging.Logger: Configured logger for user data.
+    """
+    handler = logging.StreamHandler()
+    handler.setFormatter(RedactingFormatter(fields=list(PII_FIELDS)))
+
+    logger = logging.Logger(name="user_data", level=logging.INFO)
+    logger.propagate = False
+    logger.addHandler(handler)
+
+    return logger
