@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """0. Regex-ing"""
-from typing import List
+from typing import Dict, List
 import os
 import re
 import logging
@@ -102,3 +102,27 @@ def get_db() -> MySQLConnection:
     return MySQLConnection(user=db_user, password=db_pass,
                            host=db_host,
                            database=db_name)
+
+
+def main():
+    """
+    Retrieves user data from the database and logs it.
+
+    The user data includes name, email, phone, ssh, password, ip, last_login,
+    and user_agent. The data is logged using a logger configured to handle
+    sensitive information.
+    """
+    with get_db().cursor(dictionary=True) as cur:
+        values: Dict = cur.execute(
+            """
+            SELECT
+            name, email, phone, ssh, password, ip, last_login, user_agent
+            FROM
+            users
+            """)
+    msg = ";".join(['{}={}'.format(k, v) for k, v in values.items()])
+    get_logger().info(msg)
+
+
+if __name__ == "__main__":
+    main()
