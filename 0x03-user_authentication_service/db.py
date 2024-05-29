@@ -42,7 +42,7 @@ class DB:
 
         return new_user
 
-    def find_user_by(self, **kwargs):
+    def find_user_by(self, **kwargs) -> User:
         """Find users by provided keywords arguments.
 
             Args:
@@ -58,3 +58,24 @@ class DB:
             raise NoResultFound
 
         return res
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """
+        Updates user information based on provided keyword arguments.
+
+        Args:
+            user_id (int): The ID of the user to update.
+            **kwargs: Arbitrary keyword arguments representing the fields to
+                update and their new values.
+
+        Raises:
+            NoResultFound: If no user is found with the given ID.
+            ValueError: If the update request is invalid.
+        """
+        try:
+            user = self.find_user_by(id=user_id)
+            self._session.query(User).filter_by(id=user.id).update(kwargs)
+        except NoResultFound:
+            raise
+        except InvalidRequestError:
+            raise ValueError
