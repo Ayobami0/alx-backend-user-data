@@ -29,7 +29,7 @@ def _generate_uuid() -> str:
     Returns:
         str: A random UUID represented as a hexadecimal string.
     """
-    return uuid4().hex
+    return str(uuid4())
 
 
 class Auth:
