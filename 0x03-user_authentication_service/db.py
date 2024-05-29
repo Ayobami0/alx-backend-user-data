@@ -75,6 +75,7 @@ class DB:
         try:
             user = self.find_user_by(id=user_id)
             self._session.query(User).filter_by(id=user.id).update(kwargs)
+            self._session.commit()
         except NoResultFound:
             raise
         except InvalidRequestError:
