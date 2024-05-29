@@ -63,7 +63,7 @@ class Auth:
 
     def valid_login(self, email: str, password: str) -> bool:
         """
-        Validates a user's login credentials.
+        Validate a user's login credentials.
 
         Args:
             email (str): The email of the user attempting to log in.
@@ -80,7 +80,7 @@ class Auth:
 
     def create_session(self, email: str) -> Union[str, None]:
         """
-        Creates a session for the user with the provided email.
+        Create a session for the user with the provided email.
 
         If a user with the given email exists, a session identifier (UUID) is
         generated and returned. Otherwise, None is returned.
