@@ -38,13 +38,12 @@ class DB:
         """
         new_user = User(email=email, hashed_password=hashed_password)
         self._session.add(new_user)
+        self._session.commit()
 
-        res = self._session.query(User).filter_by(email=new_user.email).first()
-
-        return res
+        return new_user
 
     def find_user_by(self, **kwargs):
-        """Finds users by provided keywords aguments 
+        """Find users by provided keywords arguments.
 
             Args:
                 kwargs: arbitrary keyword arguments
